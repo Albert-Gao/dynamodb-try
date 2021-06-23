@@ -73,13 +73,16 @@ test("get transactions from watchlist1 only", async (t) => {
       },
     })
     .promise();
-  console.log(JSON.stringify(result, null, 2));
-  t.truthy(result.Items.find((item) => item.sk === ids.transactionId11));
-  t.truthy(result.Items.find((item) => item.sk === ids.transactionId12));
-  t.truthy(result.Items.find((item) => item.sk === ids.transactionId13));
 
-  t.is(result.Count, 3);
-  t.is(result.ScannedCount, 3);
+  t.truthy(result.Items.find((item) => item.sk === ids.transactionId16));
+  t.truthy(result.Items.find((item) => item.sk === ids.transactionId15));
+  t.truthy(result.Items.find((item) => item.sk === ids.transactionId14));
+  t.truthy(result.Items.find((item) => item.sk === ids.transactionId13));
+  t.truthy(result.Items.find((item) => item.sk === ids.transactionId12));
+  t.truthy(result.Items.find((item) => item.sk === ids.transactionId11));
+
+  t.is(result.Count, 6);
+  t.is(result.ScannedCount, 6);
 });
 
 test("get 1 transaction from watchlist1 only", async (t) => {
@@ -100,7 +103,8 @@ test("get 1 transaction from watchlist1 only", async (t) => {
   t.is(result.ScannedCount, 1);
 });
 
-test("get transactions from watchlist1 with pagination", async (t) => {
+// Currently not possible with ULID as the sk
+test.skip("get transactions from watchlist1 with pagination", async (t) => {
   const result1 = await docClient
     .query({
       TableName: "Greening",
@@ -113,7 +117,7 @@ test("get transactions from watchlist1 with pagination", async (t) => {
     })
     .promise();
 
-  t.truthy(result1.Items.find((item) => item.sk === ids.transactionId13));
+  t.truthy(result1.Items.find((item) => item.sk === ids.transactionId16));
 
   t.is(result1.Count, 1);
   t.is(result1.ScannedCount, 1);
@@ -136,7 +140,7 @@ test("get transactions from watchlist1 with pagination", async (t) => {
     })
     .promise();
 
-  t.truthy(result2.Items.find((item) => item.sk === ids.transactionId11));
+  t.truthy(result2.Items.find((item) => item.sk === ids.transactionId14));
 
   t.is(result2.Count, 1);
   t.is(result2.ScannedCount, 1);
@@ -159,7 +163,7 @@ test("get transactions from watchlist1 with pagination", async (t) => {
     })
     .promise();
 
-  t.truthy(result3.Items.find((item) => item.sk === ids.transactionId12));
+  t.truthy(result3.Items.find((item) => item.sk === ids.transactionId11));
 
   t.is(result3.Count, 1);
   t.is(result3.ScannedCount, 1);

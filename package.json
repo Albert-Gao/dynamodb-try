@@ -15,7 +15,8 @@
   "dependencies": {
     "aws-sdk": "^2.932.0",
     "esm": "^3.2.25",
-    "ksuid": "^2.0.0"
+    "ksuid": "^2.0.0",
+    "ulid": "^2.3.0"
   },
   "devDependencies": {
     "ava": "^3.15.0"
