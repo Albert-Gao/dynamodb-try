@@ -4,8 +4,6 @@ import test from "ava";
 import KSUID from "ksuid";
 
 test("Test KSUID", (t) => {
-  console.log(ids.userId);
-  console.log(KSUID.randomSync().string);
   t.true(KSUID.isValid(KSUID.parse("1uLWogJfAD980hmP5Khs9YBQMty").buffer));
 });
 
@@ -75,7 +73,7 @@ test("get transactions from watchlist1 only", async (t) => {
       },
     })
     .promise();
-
+  console.log(JSON.stringify(result, null, 2));
   t.truthy(result.Items.find((item) => item.sk === ids.transactionId11));
   t.truthy(result.Items.find((item) => item.sk === ids.transactionId12));
   t.truthy(result.Items.find((item) => item.sk === ids.transactionId13));
@@ -100,4 +98,69 @@ test("get 1 transaction from watchlist1 only", async (t) => {
 
   t.is(result.Count, 1);
   t.is(result.ScannedCount, 1);
+});
+
+test("get transactions from watchlist1 with pagination", async (t) => {
+  const result1 = await docClient
+    .query({
+      TableName: "Greening",
+      KeyConditionExpression: "pk = :pkey and begins_with(sk, :skey)",
+      ExpressionAttributeValues: {
+        ":pkey": ids.userId,
+        ":skey": "IN#" + ids.watchlistId1 + "#TR#",
+      },
+      Limit: 1,
+    })
+    .promise();
+
+  t.truthy(result1.Items.find((item) => item.sk === ids.transactionId13));
+
+  t.is(result1.Count, 1);
+  t.is(result1.ScannedCount, 1);
+
+  ///////////////////////////////////
+
+  const result2 = await docClient
+    .query({
+      TableName: "Greening",
+      KeyConditionExpression: "pk = :pkey and begins_with(sk, :skey)",
+      ExpressionAttributeValues: {
+        ":pkey": ids.userId,
+        ":skey": "IN#" + ids.watchlistId1 + "#TR#",
+      },
+      ExclusiveStartKey: {
+        sk: result1.LastEvaluatedKey.sk,
+        pk: result1.LastEvaluatedKey.pk,
+      },
+      Limit: 1,
+    })
+    .promise();
+
+  t.truthy(result2.Items.find((item) => item.sk === ids.transactionId11));
+
+  t.is(result2.Count, 1);
+  t.is(result2.ScannedCount, 1);
+
+  ///////////////////////////////////
+
+  const result3 = await docClient
+    .query({
+      TableName: "Greening",
+      KeyConditionExpression: "pk = :pkey and begins_with(sk, :skey)",
+      ExpressionAttributeValues: {
+        ":pkey": ids.userId,
+        ":skey": "IN#" + ids.watchlistId1 + "#TR#",
+      },
+      ExclusiveStartKey: {
+        sk: result2.LastEvaluatedKey.sk,
+        pk: result2.LastEvaluatedKey.pk,
+      },
+      Limit: 1,
+    })
+    .promise();
+
+  t.truthy(result3.Items.find((item) => item.sk === ids.transactionId12));
+
+  t.is(result3.Count, 1);
+  t.is(result3.ScannedCount, 1);
 });
