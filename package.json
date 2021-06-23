@@ -1,0 +1,28 @@
+{
+  "name": "try-dynamo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "ava",
+    "local:db": "docker-compose up",
+    "delete:table": "node ./src/deleteAll.mjs",
+    "seed": "node ./src/createTable.mjs && node ./src/putData.mjs"
+  },
+  "author": "Albert Gao",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.932.0",
+    "esm": "^3.2.25",
+    "ksuid": "^2.0.0"
+  },
+  "devDependencies": {
+    "ava": "^3.15.0"
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ]
+  }
+}
