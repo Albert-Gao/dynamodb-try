@@ -1,6 +1,13 @@
 import { docClient } from "./dynamodb.mjs";
 import { ids } from "./staticIds.mjs";
 import test from "ava";
+import KSUID from "ksuid";
+
+test("Test KSUID", (t) => {
+  console.log(ids.userId);
+  console.log(KSUID.randomSync().string);
+  t.true(KSUID.isValid(KSUID.parse("1uLWogJfAD980hmP5Khs9YBQMty").buffer));
+});
 
 test("get user only", async (t) => {
   const result = await docClient
@@ -26,7 +33,7 @@ test("get watchlists only", async (t) => {
       KeyConditionExpression: "pk = :pkey and begins_with(sk, :skey)",
       ExpressionAttributeValues: {
         ":pkey": ids.userId,
-        ":skey": "wl#",
+        ":skey": "WL#",
       },
     })
     .promise();
@@ -64,7 +71,7 @@ test("get transactions from watchlist1 only", async (t) => {
       KeyConditionExpression: "pk = :pkey and begins_with(sk, :skey)",
       ExpressionAttributeValues: {
         ":pkey": ids.userId,
-        ":skey": "in#" + ids.watchlistId1 + "#tr#",
+        ":skey": "IN#" + ids.watchlistId1 + "#TR#",
       },
     })
     .promise();

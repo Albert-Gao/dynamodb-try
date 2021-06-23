@@ -16,9 +16,10 @@ function combineIds(ids) {
 
 const id = {
   create: {
-    user: () => "u#" + KSUID.randomSync(),
-    watchlist: () => "wl#" + KSUID.randomSync(),
-    transaction: (wlId) => combineIds(["in", wlId, "tr#" + KSUID.randomSync()]),
+    user: () => "U#" + KSUID.randomSync().string,
+    watchlist: () => "WL#" + KSUID.randomSync().string,
+    transaction: (wlId) =>
+      combineIds(["IN", wlId, "TR#" + KSUID.randomSync().string]),
   },
 };
 
